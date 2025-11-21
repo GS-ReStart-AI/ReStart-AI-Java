@@ -3,6 +3,7 @@ package br.com.restartai.restart_ai.web.api;
 import br.com.restartai.restart_ai.domain.Curriculo;
 import br.com.restartai.restart_ai.dto.curriculo.CurriculoCadastroDTO;
 import br.com.restartai.restart_ai.dto.curriculo.CurriculoRespostaDTO;
+import br.com.restartai.restart_ai.service.AnaliseCurriculoIaService;
 import br.com.restartai.restart_ai.service.CurriculoService;
 import br.com.restartai.restart_ai.service.CurriculoUploadService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,10 +26,14 @@ public class CurriculoRestController {
 
     private final CurriculoService curriculoService;
     private final CurriculoUploadService curriculoUploadService;
+    private final AnaliseCurriculoIaService analiseCurriculoIaService;
 
-    public CurriculoRestController(CurriculoService curriculoService, CurriculoUploadService curriculoUploadService) {
+    public CurriculoRestController(CurriculoService curriculoService,
+                                   CurriculoUploadService curriculoUploadService,
+                                   AnaliseCurriculoIaService analiseCurriculoIaService) {
         this.curriculoService = curriculoService;
         this.curriculoUploadService = curriculoUploadService;
+        this.analiseCurriculoIaService = analiseCurriculoIaService;
     }
 
     @Operation(summary = "Listar currículos (paginado)")
@@ -90,6 +95,13 @@ public class CurriculoRestController {
             @RequestPart("arquivo") MultipartFile arquivo) {
         Curriculo curriculo = curriculoUploadService.uploadPdf(usuarioId, arquivo);
         return ResponseEntity.status(HttpStatus.CREATED).body(toRespostaDTO(curriculo));
+    }
+
+    @Operation(summary = "Analisar currículo via IA")
+    @PostMapping("/{id}/analisar")
+    public ResponseEntity<String> analisar(@PathVariable Long id) {
+        String analise = analiseCurriculoIaService.analisarCurriculo(id);
+        return ResponseEntity.ok(analise);
     }
 
     private CurriculoRespostaDTO toRespostaDTO(Curriculo curriculo) {
