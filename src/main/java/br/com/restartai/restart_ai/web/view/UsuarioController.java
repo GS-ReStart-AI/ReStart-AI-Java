@@ -1,6 +1,6 @@
 package br.com.restartai.restart_ai.web.view;
 
-import br.com.restartai.restart_ai.dto.UsuarioCadastroDTO;
+import br.com.restartai.restart_ai.dto.usuario.UsuarioCadastroDTO;
 import br.com.restartai.restart_ai.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
