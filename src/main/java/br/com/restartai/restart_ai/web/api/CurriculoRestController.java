@@ -4,6 +4,7 @@ import br.com.restartai.restart_ai.domain.Curriculo;
 import br.com.restartai.restart_ai.dto.curriculo.CurriculoCadastroDTO;
 import br.com.restartai.restart_ai.dto.curriculo.CurriculoRespostaDTO;
 import br.com.restartai.restart_ai.service.CurriculoService;
+import br.com.restartai.restart_ai.service.CurriculoUploadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Tag(name = "2. Currículos", description = "CRUD de currículos de usuários")
@@ -22,9 +24,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class CurriculoRestController {
 
     private final CurriculoService curriculoService;
+    private final CurriculoUploadService curriculoUploadService;
 
-    public CurriculoRestController(CurriculoService curriculoService) {
+    public CurriculoRestController(CurriculoService curriculoService, CurriculoUploadService curriculoUploadService) {
         this.curriculoService = curriculoService;
+        this.curriculoUploadService = curriculoUploadService;
     }
 
     @Operation(summary = "Listar currículos (paginado)")
@@ -32,15 +36,14 @@ public class CurriculoRestController {
     public Page<CurriculoRespostaDTO> listar(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String sort) {
+            @RequestParam(defaultValue = "criadoEm") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction
+    ) {
+        Sort sort = direction.equalsIgnoreCase("DESC")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
 
-        String[] sortParts = sort.split(",");
-        String sortField = sortParts[0];
-        String sortDirection = sortParts.length > 1 ? sortParts[1] : "asc";
-
-        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
-
+        Pageable pageable = PageRequest.of(page, size, sort);
         return curriculoService.listar(pageable).map(this::toRespostaDTO);
     }
 
@@ -51,19 +54,21 @@ public class CurriculoRestController {
         return ResponseEntity.ok(toRespostaDTO(curriculo));
     }
 
-    @Operation(summary = "Cadastrar novo currículo")
+    @Operation(summary = "Criar novo currículo (JSON)")
     @PostMapping
     public ResponseEntity<CurriculoRespostaDTO> criar(@Valid @RequestBody CurriculoCadastroDTO dto) {
         Curriculo curriculo = curriculoService.criar(dto);
-        CurriculoRespostaDTO resposta = toRespostaDTO(curriculo);
-        var uri = ServletUriComponentsBuilder.fromCurrentRequest()
+        CurriculoRespostaDTO respostaDTO = toRespostaDTO(curriculo);
+
+        var location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(resposta.getId())
+                .buildAndExpand(respostaDTO.getId())
                 .toUri();
-        return ResponseEntity.created(uri).body(resposta);
+
+        return ResponseEntity.created(location).body(respostaDTO);
     }
 
-    @Operation(summary = "Atualizar currículo existente")
+    @Operation(summary = "Atualizar currículo")
     @PutMapping("/{id}")
     public ResponseEntity<CurriculoRespostaDTO> atualizar(@PathVariable Long id,
                                                           @Valid @RequestBody CurriculoCadastroDTO dto) {
@@ -76,6 +81,15 @@ public class CurriculoRestController {
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         curriculoService.excluir(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Operation(summary = "Upload de currículo em PDF")
+    @PostMapping(value = "/upload", consumes = "multipart/form-data")
+    public ResponseEntity<CurriculoRespostaDTO> uploadPdf(
+            @RequestParam Long usuarioId,
+            @RequestPart("arquivo") MultipartFile arquivo) {
+        Curriculo curriculo = curriculoUploadService.uploadPdf(usuarioId, arquivo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toRespostaDTO(curriculo));
     }
 
     private CurriculoRespostaDTO toRespostaDTO(Curriculo curriculo) {
