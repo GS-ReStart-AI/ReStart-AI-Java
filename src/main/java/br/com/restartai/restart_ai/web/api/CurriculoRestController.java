@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@Tag(name = "Currículos", description = "CRUD de currículos de usuários")
+@Tag(name = "2. Currículos", description = "CRUD de currículos de usuários")
 @RestController
 @RequestMapping("/api/curriculos")
 public class CurriculoRestController {

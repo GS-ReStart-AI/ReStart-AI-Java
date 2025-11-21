@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@Tag(name = "Usuários", description = "Operações de CRUD de usuários do Restart.Ai")
+@Tag(name = "1. Usuários", description = "Operações de CRUD de usuários do Restart.Ai")
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuarioRestController {
