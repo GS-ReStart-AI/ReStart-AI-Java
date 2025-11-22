@@ -20,25 +20,31 @@
     <div class="login-card">
         <h1 class="login-title">Entrar</h1>
 
-        <form th:action="@{/login}" method="post" class="login-form">
+        <div th:if="${#fields.hasGlobalErrors()}"
+             th:each="err : ${#fields.globalErrors()}"
+             th:text="${err}"></div>
+
+        <form th:action="@{/login}" th:object="${login}" method="post" class="login-form">
             <div class="form-group">
-                <label for="username" class="form-label">E-mail</label>
-                <input id="username"
-                       name="username"
-                       type="text"
+                <label for="email" class="form-label">E-mail</label>
+                <input id="email"
+                       type="email"
+                       th:field="*{email}"
                        class="form-control input-control"
                        placeholder="Digite seu e-mail"
                        required>
+                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
             </div>
 
             <div class="form-group">
-                <label for="password" class="form-label">Senha</label>
-                <input id="password"
-                       name="password"
+                <label for="senha" class="form-label">Senha</label>
+                <input id="senha"
                        type="password"
+                       th:field="*{senha}"
                        class="form-control input-control"
                        placeholder="Digite sua senha"
                        required>
+                <div th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}"></div>
             </div>
 
             <button type="submit" class="btn btn-primary btn-login">Entrar</button>

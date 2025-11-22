@@ -1,49 +1,60 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
-    <link rel="stylesheet" href="/css/cadastro.css">
+    <link rel="stylesheet" th:href="@{/css/cadastro.css}">
 </head>
 <body>
 
 <header class="header">
-    <img src="/images/logo.png" class="logo" alt="logo">
+    <img class="logo" th:src="@{/images/logo.png}" alt="logo">
     <span class="brand">ReStart.AI</span>
 </header>
 
 <div class="center-wrapper">
     <div class="card">
 
-        <h1 class="title">Cadastro</h1>
+        <h1 class="title">Crie sua conta</h1>
 
-        <form method="post" action="/usuarios/cadastro">
+        <div th:if="${#fields.hasGlobalErrors()}"
+             th:each="err : ${#fields.globalErrors()}"
+             th:text="${err}"></div>
 
-            <label>Nome Completo:</label>
-            <input type="text" name="nome" placeholder="Digite seu nome completo">
+        <form th:action="@{/usuarios/cadastro}" th:object="${usuario}" method="post">
 
-            <label>CPF:</label>
-            <input type="text" name="cpf" placeholder="000.000.000-00">
+            <label for="nomeCompleto">Nome completo</label>
+            <input id="nomeCompleto" type="text" th:field="*{nomeCompleto}" placeholder="Seu nome completo">
+            <div th:if="${#fields.hasErrors('nomeCompleto')}" th:errors="*{nomeCompleto}"></div>
 
-            <label>Data de nascimento:</label>
-            <input type="text" name="dataNascimento" placeholder="xx/xx/xxxx">
+            <label for="cpf">CPF</label>
+            <input id="cpf" type="text" th:field="*{cpf}" placeholder="Somente números">
+            <div th:if="${#fields.hasErrors('cpf')}" th:errors="*{cpf}"></div>
 
-            <label>Email:</label>
-            <input type="email" name="email" placeholder="Digite seu email">
+            <label for="dataNascimento">Data de nascimento</label>
+            <input id="dataNascimento" type="date" th:field="*{dataNascimento}">
+            <div th:if="${#fields.hasErrors('dataNascimento')}" th:errors="*{dataNascimento}"></div>
 
-            <label>Senha:</label>
-            <input type="password" name="senha" placeholder="Digite sua senha">
+            <label for="email">E-mail</label>
+            <input id="email" type="email" th:field="*{email}" placeholder="seuemail@exemplo.com">
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+
+            <label for="senha">Senha</label>
+            <input id="senha" type="password" th:field="*{senha}" placeholder="Digite sua senha">
+            <div th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}"></div>
+
+            <label for="confirmarSenha">Confirmar senha</label>
+            <input id="confirmarSenha" type="password" th:field="*{confirmarSenha}" placeholder="Repita a senha">
+            <div th:if="${#fields.hasErrors('confirmarSenha')}" th:errors="*{confirmarSenha}"></div>
 
             <div class="login-link">
                 Já tenho conta?
-                <a href="/login">Login</a>
+                <a th:href="@{/login}">Login</a>
             </div>
 
             <button type="submit" class="btn">ACESSAR</button>
-
         </form>
-
     </div>
 </div>
 
