@@ -4,7 +4,6 @@ import br.com.restartai.restart_ai.dto.usuario.UsuarioCadastroDTO;
 import br.com.restartai.restart_ai.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,13 +19,17 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @GetMapping("/cadastro")
-    public String mostrarFormularioCadastro(Model model) {
-        model.addAttribute("usuario", new UsuarioCadastroDTO());
+    @ModelAttribute("usuario")
+    public UsuarioCadastroDTO usuarioModel() {
+        return new UsuarioCadastroDTO();
+    }
+
+    @GetMapping("/usuarios/cadastro")
+    public String mostrarFormularioCadastro() {
         return "usuarios/cadastro";
     }
 
-    @PostMapping("/cadastro")
+    @PostMapping("/usuarios/cadastro")
     public String processarCadastro(@Valid @ModelAttribute("usuario") UsuarioCadastroDTO dto,
                                     BindingResult result,
                                     RedirectAttributes redirectAttributes) {
