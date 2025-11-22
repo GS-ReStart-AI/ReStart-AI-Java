@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import br.com.restartai.restart_ai.dto.usuario.UsuarioPerfilAtualizacaoDTO;
+
 
 @Service
 public class UsuarioService {
@@ -100,6 +102,24 @@ public class UsuarioService {
         }
         usuarioRepository.deleteById(id);
     }
+
+    public Usuario atualizarPerfil(Long id, UsuarioPerfilAtualizacaoDTO dto) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
+
+        if (!usuario.getCpf().equals(dto.getCpf())
+                && usuarioRepository.existsByCpf(dto.getCpf())) {
+            throw new IllegalArgumentException("CPF já cadastrado.");
+        }
+
+        usuario.setNomeCompleto(dto.getNomeCompleto());
+        usuario.setCpf(dto.getCpf());
+        usuario.setDataNascimento(dto.getDataNascimento());
+        usuario.setAtualizadoEm(LocalDateTime.now());
+
+        return usuarioRepository.save(usuario);
+    }
+
 
     public Usuario autenticar(String email, String senha) {
         Usuario usuario = usuarioRepository.findByEmail(email)

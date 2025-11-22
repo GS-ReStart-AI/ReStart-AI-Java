@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import br.com.restartai.restart_ai.dto.usuario.UsuarioPerfilAtualizacaoDTO;
+
 
 @Tag(name = "1. Usuários", description = "Operações de CRUD de usuários do Restart.Ai")
 @RestController
@@ -70,6 +72,15 @@ public class UsuarioRestController {
         Usuario usuario = usuarioService.atualizar(id, dto);
         return ResponseEntity.ok(toRespostaDTO(usuario));
     }
+
+    @Operation(summary = "Atualizar dados de perfil do usuário (sem alterar senha)")
+    @PutMapping("/{id}/perfil")
+    public ResponseEntity<UsuarioRespostaDTO> atualizarPerfil(@PathVariable Long id,
+                                                              @Valid @RequestBody UsuarioPerfilAtualizacaoDTO dto) {
+        Usuario usuario = usuarioService.atualizarPerfil(id, dto);
+        return ResponseEntity.ok(toRespostaDTO(usuario));
+    }
+
 
     @Operation(summary = "Excluir usuário")
     @DeleteMapping("/{id}")

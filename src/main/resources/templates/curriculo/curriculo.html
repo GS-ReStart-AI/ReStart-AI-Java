@@ -15,7 +15,7 @@
         <span class="brand-name">ReStart.AI</span>
     </div>
 
-    <a href="#" class="btn-perfil">Meu Perfil</a>
+    <a th:href="@{/perfil(usuarioId=${usuarioId})}" class="btn-perfil">Meu Perfil</a>
 </header>
 
 <main class="curriculo-main">
@@ -88,7 +88,6 @@
 <footer class="footer">
     <span>ReStart.AI © 2025</span>
 </footer>
-
 
 <script>
     const uploadForm = document.getElementById('uploadForm');
@@ -183,10 +182,10 @@
 
             const sections = parseAnaliseIa(text);
 
-            resumoPerfilEl.textContent = sections.resumo || 'Sem informações.';
-            competenciasEl.textContent = sections.competencias || 'Sem informações.';
-            areasAtuaisEl.textContent = sections.areasAtuais || 'Sem informações.';
-            areasAlternativasEl.textContent = sections.areasAlternativas || 'Sem informações.';
+            resumoPerfilEl.innerHTML = formatSectionText(sections.resumo);
+            competenciasEl.innerHTML = formatSectionText(sections.competencias);
+            areasAtuaisEl.innerHTML = formatSectionText(sections.areasAtuais);
+            areasAlternativasEl.innerHTML = formatSectionText(sections.areasAlternativas);
         } catch (err) {
             resumoPerfilEl.textContent = 'Erro inesperado na análise.';
         } finally {
@@ -194,6 +193,36 @@
             analyzeBtn.textContent = 'Analisar currículo com IA';
         }
     });
+
+    function formatSectionText(texto) {
+        if (!texto || !texto.trim()) {
+            return 'Sem informações.';
+        }
+
+        let html = texto.trim();
+
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+        const lower = html.toLowerCase();
+        const idx = lower.indexOf('justificativa:');
+
+        if (idx !== -1) {
+            const tituloParte = html.slice(0, idx).trim();
+            const justificativaParte = html.slice(idx + 'justificativa:'.length).trim();
+
+            html =
+                (tituloParte
+                    ? '<div class="analise-sugestao">' + tituloParte + '</div>'
+                    : '') +
+                (justificativaParte
+                    ? '<div class="analise-justificativa"><span class="secao-label">Justificativa:</span> ' +
+                    justificativaParte +
+                    '</div>'
+                    : '');
+        }
+
+        return html;
+    }
 
     function parseAnaliseIa(texto) {
         const resultado = {
