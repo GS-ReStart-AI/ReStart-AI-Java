@@ -48,7 +48,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/login")
-    public String mostrarLogin() {
+    public String telaLogin() {
         return "usuarios/login";
     }
 }
