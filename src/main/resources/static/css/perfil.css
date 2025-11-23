@@ -275,3 +275,26 @@ body {
     transform: translateY(-1px);
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
 }
+
+.logout-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 0;
+}
+
+.logout-btn:hover {
+    background: #e5e7eb;
+}
+
+.logout-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #e5e7eb;
+}
