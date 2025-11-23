@@ -10,7 +10,7 @@ Com poucos cliques, você cadastra seu currículo, a plataforma analisa seu perf
 
 - 🎥 Pitch do projeto: **[Assista ao pitch](https://seu-link-do-pitch-aqui)**  
 - 🌐 Deploy (aplicação online): **[Acesse a ReStart.AI](https://restart-rm558191.azurewebsites.net/)**  
-- 📚 Documentação da API (Swagger/OpenAPI): **[Ver documentação](https://seu-link-do-deploy-aqui/swagger-ui.html)**
+- 📚 Documentação da API (Swagger/OpenAPI): **[Ver documentação](https://restart-rm558191.azurewebsites.net/swagger-ui/index.html)**
 
 ---
 
@@ -175,6 +175,7 @@ http://localhost:8080
 
 * ⭐️ **Valéria Conceição Dos Santos** — RM: **557177**  
 * ⭐️ **Mirela Pinheiro Silva Rodrigues** — RM: **558191**
+
 
 
 
