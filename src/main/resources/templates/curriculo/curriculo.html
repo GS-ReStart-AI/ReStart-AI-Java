@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<html lang="pt" xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <head>
     <meta charset="UTF-8">
-    <title>ReStart.AI - Resume</title>
+    <title>ReStart.AI - Currículo</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/curriculo.css}">
@@ -18,7 +18,7 @@
     <div class="top-right">
         <a th:href="@{/perfil(usuarioId=${usuarioId})}"
            class="btn-perfil"
-           th:text="#{curriculo.button.profile}">My Profile</a>
+           th:text="#{curriculo.button.profile}">Meu Perfil</a>
 
         <div class="lang-dropdown">
             <button class="lang-btn" type="button">🌐</button>
@@ -34,14 +34,14 @@
 
     <section class="card-wrapper">
         <div class="curriculo-card">
-            <h1 class="card-title" th:text="#{curriculo.title}">Your resume</h1>
+            <h1 class="card-title" th:text="#{curriculo.title}">Seu currículo</h1>
 
             <form id="uploadForm" class="upload-form" enctype="multipart/form-data">
                 <input type="hidden" id="usuarioId" name="usuarioId" th:value="${usuarioId}">
 
                 <div class="form-group">
                     <label for="arquivo" class="form-label"
-                           th:text="#{curriculo.label.upload}">Upload your resume in PDF</label>
+                           th:text="#{curriculo.label.upload}">Envie seu currículo em PDF</label>
                     <input id="arquivo"
                            name="arquivo"
                            type="file"
@@ -53,46 +53,46 @@
                 <div id="uploadStatus" class="status-text"></div>
 
                 <button type="submit" class="btn-principal"
-                        th:text="#{curriculo.button.upload}">Upload</button>
+                        th:text="#{curriculo.button.upload}">Enviar</button>
             </form>
         </div>
     </section>
 
     <section id="analiseSection" class="card-wrapper hidden">
         <div class="analise-card">
-            <h2 class="card-title" th:text="#{curriculo.analysis.title}">AI Analysis</h2>
+            <h2 class="card-title" th:text="#{curriculo.analysis.title}">Análise da IA</h2>
 
             <p class="analise-subtitle"
                th:text="#{curriculo.analysis.subtitle}">
-                After sending the PDF, click the button below to generate insights about your resume.
+                Após enviar o PDF, clique no botão abaixo para gerar insights sobre o seu currículo.
             </p>
 
             <button id="analyzeBtn"
                     class="btn-secundario"
                     disabled
                     th:text="#{curriculo.button.analyze}">
-                Analyze resume with AI
+                Analisar currículo com IA
             </button>
 
             <div class="analise-grid">
 
                 <div class="analise-bloco">
-                    <h3 th:text="#{curriculo.section1.title}">1. Summary of Professional Profile</h3>
+                    <h3 th:text="#{curriculo.section1.title}">1. Resumo do perfil profissional</h3>
                     <p id="resumoPerfil"></p>
                 </div>
 
                 <div class="analise-bloco">
-                    <h3 th:text="#{curriculo.section2.title}">2. Key Skills and Competencies</h3>
+                    <h3 th:text="#{curriculo.section2.title}">2. Principais competências e habilidades</h3>
                     <p id="competenciasHabilidades"></p>
                 </div>
 
                 <div class="analise-bloco">
-                    <h3 th:text="#{curriculo.section3.title}">3. Possible Current Areas of Work</h3>
+                    <h3 th:text="#{curriculo.section3.title}">3. Áreas de atuação atuais possíveis</h3>
                     <p id="areasAtuais"></p>
                 </div>
 
                 <div class="analise-bloco">
-                    <h3 th:text="#{curriculo.section4.title}">4. Alternative Areas for Career Change</h3>
+                    <h3 th:text="#{curriculo.section4.title}">4. Áreas alternativas para migração de carreira</h3>
                     <p id="areasAlternativas"></p>
                 </div>
             </div>
@@ -106,19 +106,21 @@
 </footer>
 
 <script th:inline="javascript">
-    const MSG_SELECT_PDF          = /*[[#{curriculo.upload.selectFirst}]]*/ 'Please select a PDF first.';
-    const MSG_SENDING             = /*[[#{curriculo.upload.sending}]]*/ 'Uploading resume...';
-    const MSG_UPLOAD_ERROR        = /*[[#{curriculo.upload.error}]]*/ 'Error uploading resume.';
-    const MSG_UPLOAD_OK           = /*[[#{curriculo.upload.success}]]*/ 'Resume uploaded successfully.';
-    const MSG_UPLOAD_UNEXPECTED   = /*[[#{curriculo.upload.errorUnexpected}]]*/ 'Unexpected error while uploading resume.';
+    const MSG_SELECT_PDF          = /*[[#{curriculo.upload.selectFirst}]]*/ 'Selecione um PDF primeiro.';
+    const MSG_SENDING             = /*[[#{curriculo.upload.sending}]]*/ 'Enviando currículo...';
+    const MSG_UPLOAD_ERROR        = /*[[#{curriculo.upload.error}]]*/ 'Erro ao enviar currículo.';
+    const MSG_UPLOAD_OK           = /*[[#{curriculo.upload.success}]]*/ 'Currículo enviado com sucesso.';
+    const MSG_UPLOAD_UNEXPECTED   = /*[[#{curriculo.upload.errorUnexpected}]]*/ 'Erro inesperado ao enviar currículo.';
 
-    const MSG_ANALYZE_RUNNING     = /*[[#{curriculo.button.analyze.loading}]]*/ 'Generating analysis...';
-    const MSG_ANALYZE_ERROR       = /*[[#{curriculo.error.analyze}]]*/ 'Error analyzing resume.';
-    const MSG_ANALYZE_UNEXPECTED  = /*[[#{curriculo.error.unexpected}]]*/ 'Unexpected error during analysis.';
-    const MSG_ANALYZE_BTN         = /*[[#{curriculo.button.analyze}]]*/ 'Analyze resume with AI';
+    const MSG_ANALYZE_RUNNING     = /*[[#{curriculo.button.analyze.loading}]]*/ 'Gerando análise...';
+    const MSG_ANALYZE_ERROR       = /*[[#{curriculo.error.analyze}]]*/ 'Erro ao analisar currículo.';
+    const MSG_ANALYZE_UNEXPECTED  = /*[[#{curriculo.error.unexpected}]]*/ 'Erro inesperado durante a análise.';
+    const MSG_ANALYZE_BTN         = /*[[#{curriculo.button.analyze}]]*/ 'Analisar currículo com IA';
 
-    const MSG_NO_INFO             = /*[[#{curriculo.section.empty}]]*/ 'No information available.';
-    const LABEL_JUSTIFICATIVA     = /*[[#{curriculo.label.justificativa}]]*/ 'Justification:';
+    const MSG_NO_INFO             = /*[[#{curriculo.section.empty}]]*/ 'Sem informações.';
+    const LABEL_JUSTIFICATIVA     = /*[[#{curriculo.label.justificativa}]]*/ 'Justificativa:';
+
+    const IA_LANG                 = /*[[${iaLang}]]*/ 'en';
 
     const uploadForm = document.getElementById('uploadForm');
     const uploadStatus = document.getElementById('uploadStatus');
@@ -139,23 +141,16 @@
         const arquivoInput = document.getElementById('arquivo');
         if (!arquivoInput.files.length) {
             uploadStatus.textContent = MSG_SELECT_PDF;
-            uploadStatus.classList.add('status-erro');
+            uploadStatus.className = 'status-text error';
             return;
         }
 
         const formData = new FormData();
-        formData.append('usuarioId', usuarioIdInput.value);
         formData.append('arquivo', arquivoInput.files[0]);
+        formData.append('usuarioId', usuarioIdInput.value);
 
         uploadStatus.textContent = MSG_SENDING;
         uploadStatus.className = 'status-text';
-        resumoPerfilEl.textContent = '';
-        competenciasEl.textContent = '';
-        areasAtuaisEl.textContent = '';
-        areasAlternativasEl.textContent = '';
-        analyzeBtn.disabled = true;
-        curriculoId = null;
-        analiseSection.classList.add('hidden');
 
         try {
             const response = await fetch('/api/curriculos/upload', {
@@ -165,7 +160,7 @@
 
             if (!response.ok) {
                 uploadStatus.textContent = MSG_UPLOAD_ERROR;
-                uploadStatus.classList.add('status-erro');
+                uploadStatus.className = 'status-text error';
                 return;
             }
 
@@ -173,18 +168,19 @@
             curriculoId = data.id;
 
             uploadStatus.textContent = MSG_UPLOAD_OK;
-            uploadStatus.classList.add('status-ok');
+            uploadStatus.className = 'status-text success';
 
             analiseSection.classList.remove('hidden');
-            analyzeBtn.disabled = !curriculoId;
-        } catch (err) {
+            analyzeBtn.disabled = false;
+        } catch (error) {
             uploadStatus.textContent = MSG_UPLOAD_UNEXPECTED;
-            uploadStatus.classList.add('status-erro');
+            uploadStatus.className = 'status-text error';
         }
     });
 
     analyzeBtn.addEventListener('click', async function () {
         if (!curriculoId) {
+            resumoPerfilEl.textContent = MSG_ANALYZE_ERROR;
             return;
         }
 
@@ -197,7 +193,7 @@
         areasAlternativasEl.textContent = '';
 
         try {
-            const response = await fetch('/api/curriculos/' + curriculoId + '/analisar', {
+            const response = await fetch('/api/curriculos/' + curriculoId + '/analisar?lang=' + encodeURIComponent(IA_LANG), {
                 method: 'POST'
             });
 
@@ -218,40 +214,39 @@
             areasAlternativasEl.innerHTML = formatSectionText(sections.areasAlternativas);
         } catch (err) {
             resumoPerfilEl.textContent = MSG_ANALYZE_UNEXPECTED;
-        } finally {
             analyzeBtn.disabled = false;
             analyzeBtn.textContent = MSG_ANALYZE_BTN;
         }
     });
 
-    function formatSectionText(texto) {
-        if (!texto || !texto.trim()) {
-            return MSG_NO_INFO;
+    function formatSectionText(text) {
+        if (!text || !text.trim()) {
+            return '<span class="sem-info">' + MSG_NO_INFO + '</span>';
         }
 
-        let html = texto.trim();
+        const parts = text.split(/\n+/).map(p => p.trim()).filter(p => p.length > 0);
 
-        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        const paragraphs = parts.map(p => {
+            if (/^[-•]/.test(p)) {
+                return '<li>' + p.replace(/^[-•]\s*/, '') + '</li>';
+            }
+            if (/^Justificativa[:\-]/i.test(p)) {
+                return '<p><strong>' + LABEL_JUSTIFICATIVA + '</strong> ' + p.replace(/^Justificativa[:\-]\s*/i, '') + '</p>';
+            }
+            return '<p>' + p + '</p>';
+        });
 
-        const lower = html.toLowerCase();
-        const labelLower = LABEL_JUSTIFICATIVA.toLowerCase();
-        const idx = lower.indexOf(labelLower);
+        const listItems = paragraphs.filter(p => p.startsWith('<li>'));
+        const otherParagraphs = paragraphs.filter(p => !p.startsWith('<li>'));
 
-        if (idx !== -1) {
-            const tituloParte = html.slice(0, idx).trim();
-            const justificativaParte = html.slice(idx + LABEL_JUSTIFICATIVA.length).trim();
+        let html = '';
 
-            html =
-                (tituloParte
-                    ? '<div class="analise-sugestao">' + tituloParte + '</div>'
-                    : '') +
-                (justificativaParte
-                    ? '<div class="analise-justificativa"><span class="secao-label">'
-                    + LABEL_JUSTIFICATIVA +
-                    '</span> ' +
-                    justificativaParte +
-                    '</div>'
-                    : '');
+        otherParagraphs.forEach(p => {
+            html += p;
+        });
+
+        if (listItems.length > 0) {
+            html += '<ul>' + listItems.join('') + '</ul>';
         }
 
         return html;
@@ -265,21 +260,75 @@
             areasAlternativas: ''
         };
 
-        const partes = texto.split(/\n(?=\d\.)/);
+        if (!texto || !texto.trim()) {
+            return resultado;
+        }
 
-        partes.forEach(parte => {
-            const p = parte.trim();
+        const partes = texto.split(/\n{2,}/).map(p => p.trim()).filter(p => p.length > 0);
 
-            if (/^1\./.test(p)) {
-                resultado.resumo = p.replace(/^1\.\s*/i, '').trim();
-            } else if (/^2\./.test(p)) {
-                resultado.competencias = p.replace(/^2\.\s*/i, '').trim();
-            } else if (/^3\./.test(p)) {
-                resultado.areasAtuais = p.replace(/^3\.\s*/i, '').trim();
-            } else if (/^4\./.test(p)) {
-                resultado.areasAlternativas = p.replace(/^4\.\s*/i, '').trim();
+        const textoUnico = partes.join('\n\n');
+
+        const linhas = textoUnico.split('\n');
+
+        let secaoAtual = null;
+        let buffer = [];
+
+        function salvarBuffer() {
+            if (!secaoAtual || buffer.length === 0) return;
+            const conteudo = buffer.join('\n').trim();
+            if (!conteudo) return;
+
+            if (secaoAtual === 'resumo') {
+                resultado.resumo = conteudo;
+            } else if (secaoAtual === 'competencias') {
+                resultado.competencias = conteudo;
+            } else if (secaoAtual === 'areasAtuais') {
+                resultado.areasAtuais = conteudo;
+            } else if (secaoAtual === 'areasAlternativas') {
+                resultado.areasAlternativas = conteudo;
             }
+            buffer = [];
+        }
+
+        linhas.forEach(linha => {
+            const textoLinha = linha.trim();
+
+            if (/^1\./.test(textoLinha)) {
+                salvarBuffer();
+                secaoAtual = 'resumo';
+                buffer.push(textoLinha.replace(/^1\.\s*/i, '').trim());
+                return;
+            }
+
+            if (/^2\./.test(textoLinha)) {
+                salvarBuffer();
+                secaoAtual = 'competencias';
+                buffer.push(textoLinha.replace(/^2\.\s*/i, '').trim());
+                return;
+            }
+
+            if (/^3\./.test(textoLinha)) {
+                salvarBuffer();
+                secaoAtual = 'areasAtuais';
+                buffer.push(textoLinha.replace(/^3\.\s*/i, '').trim());
+                return;
+            }
+
+            if (/^4\./.test(textoLinha)) {
+                salvarBuffer();
+                secaoAtual = 'areasAlternativas';
+                buffer.push(textoLinha.replace(/^4\.\s*/i, '').trim());
+                return;
+            }
+
+            if (!secaoAtual) {
+                secaoAtual = 'resumo';
+            }
+
+            buffer.push(textoLinha);
         });
+
+        salvarBuffer();
 
         if (!resultado.resumo &&
             !resultado.competencias &&

@@ -99,8 +99,9 @@ public class CurriculoRestController {
 
     @Operation(summary = "Analisar currículo via IA")
     @PostMapping("/{id}/analisar")
-    public ResponseEntity<String> analisar(@PathVariable Long id) {
-        String analise = analiseCurriculoIaService.analisarCurriculo(id);
+    public ResponseEntity<String> analisar(@PathVariable Long id,
+                                           @RequestParam(name = "lang", required = false) String lang) {
+        String analise = analiseCurriculoIaService.analisarCurriculo(id, lang);
         return ResponseEntity.ok(analise);
     }
 
