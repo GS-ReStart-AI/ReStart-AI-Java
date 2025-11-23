@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <head>
     <meta charset="UTF-8">
-    <title>ReStart.AI - Currículo</title>
+    <title>ReStart.AI - Resume</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/curriculo.css}">
@@ -15,20 +15,33 @@
         <span class="brand-name">ReStart.AI</span>
     </div>
 
-    <a th:href="@{/perfil(usuarioId=${usuarioId})}" class="btn-perfil">Meu Perfil</a>
+    <div class="top-right">
+        <a th:href="@{/perfil(usuarioId=${usuarioId})}"
+           class="btn-perfil"
+           th:text="#{curriculo.button.profile}">My Profile</a>
+
+        <div class="lang-dropdown">
+            <button class="lang-btn" type="button">🌐</button>
+            <div class="lang-menu">
+                <a th:href="@{/curriculo(usuarioId=${usuarioId},lang='pt_BR')}">PT</a>
+                <a th:href="@{/curriculo(usuarioId=${usuarioId},lang='en')}">EN</a>
+            </div>
+        </div>
+    </div>
 </header>
 
 <main class="curriculo-main">
 
     <section class="card-wrapper">
         <div class="curriculo-card">
-            <h1 class="card-title">Seu currículo</h1>
+            <h1 class="card-title" th:text="#{curriculo.title}">Your resume</h1>
 
             <form id="uploadForm" class="upload-form" enctype="multipart/form-data">
                 <input type="hidden" id="usuarioId" name="usuarioId" th:value="${usuarioId}">
 
                 <div class="form-group">
-                    <label for="arquivo" class="form-label">Envie seu currículo em PDF</label>
+                    <label for="arquivo" class="form-label"
+                           th:text="#{curriculo.label.upload}">Upload your resume in PDF</label>
                     <input id="arquivo"
                            name="arquivo"
                            type="file"
@@ -39,44 +52,47 @@
 
                 <div id="uploadStatus" class="status-text"></div>
 
-                <button type="submit" class="btn-principal">
-                    enviar
-                </button>
+                <button type="submit" class="btn-principal"
+                        th:text="#{curriculo.button.upload}">Upload</button>
             </form>
         </div>
     </section>
 
     <section id="analiseSection" class="card-wrapper hidden">
         <div class="analise-card">
-            <h2 class="card-title">Analise da IA</h2>
+            <h2 class="card-title" th:text="#{curriculo.analysis.title}">AI Analysis</h2>
 
-            <p class="analise-subtitle">
-                Após o envio do PDF, clique no botão abaixo para gerar os pontos sobre o seu currículo.
+            <p class="analise-subtitle"
+               th:text="#{curriculo.analysis.subtitle}">
+                After sending the PDF, click the button below to generate insights about your resume.
             </p>
 
-            <button id="analyzeBtn" class="btn-secundario" disabled>
-                Analisar currículo com IA
+            <button id="analyzeBtn"
+                    class="btn-secundario"
+                    disabled
+                    th:text="#{curriculo.button.analyze}">
+                Analyze resume with AI
             </button>
 
             <div class="analise-grid">
 
                 <div class="analise-bloco">
-                    <h3>1. Resumo do Perfil Profissional</h3>
+                    <h3 th:text="#{curriculo.section1.title}">1. Summary of Professional Profile</h3>
                     <p id="resumoPerfil"></p>
                 </div>
 
                 <div class="analise-bloco">
-                    <h3>2. Principais Competências e Habilidades</h3>
+                    <h3 th:text="#{curriculo.section2.title}">2. Key Skills and Competencies</h3>
                     <p id="competenciasHabilidades"></p>
                 </div>
 
                 <div class="analise-bloco">
-                    <h3>3. Áreas de Atuação Atuais Possíveis</h3>
+                    <h3 th:text="#{curriculo.section3.title}">3. Possible Current Areas of Work</h3>
                     <p id="areasAtuais"></p>
                 </div>
 
                 <div class="analise-bloco">
-                    <h3>4. Áreas Alternativas para Migração de Carreira</h3>
+                    <h3 th:text="#{curriculo.section4.title}">4. Alternative Areas for Career Change</h3>
                     <p id="areasAlternativas"></p>
                 </div>
             </div>
@@ -89,7 +105,21 @@
     <span>ReStart.AI © 2025</span>
 </footer>
 
-<script>
+<script th:inline="javascript">
+    const MSG_SELECT_PDF          = /*[[#{curriculo.upload.selectFirst}]]*/ 'Please select a PDF first.';
+    const MSG_SENDING             = /*[[#{curriculo.upload.sending}]]*/ 'Uploading resume...';
+    const MSG_UPLOAD_ERROR        = /*[[#{curriculo.upload.error}]]*/ 'Error uploading resume.';
+    const MSG_UPLOAD_OK           = /*[[#{curriculo.upload.success}]]*/ 'Resume uploaded successfully.';
+    const MSG_UPLOAD_UNEXPECTED   = /*[[#{curriculo.upload.errorUnexpected}]]*/ 'Unexpected error while uploading resume.';
+
+    const MSG_ANALYZE_RUNNING     = /*[[#{curriculo.button.analyze.loading}]]*/ 'Generating analysis...';
+    const MSG_ANALYZE_ERROR       = /*[[#{curriculo.error.analyze}]]*/ 'Error analyzing resume.';
+    const MSG_ANALYZE_UNEXPECTED  = /*[[#{curriculo.error.unexpected}]]*/ 'Unexpected error during analysis.';
+    const MSG_ANALYZE_BTN         = /*[[#{curriculo.button.analyze}]]*/ 'Analyze resume with AI';
+
+    const MSG_NO_INFO             = /*[[#{curriculo.section.empty}]]*/ 'No information available.';
+    const LABEL_JUSTIFICATIVA     = /*[[#{curriculo.label.justificativa}]]*/ 'Justification:';
+
     const uploadForm = document.getElementById('uploadForm');
     const uploadStatus = document.getElementById('uploadStatus');
     const analyzeBtn = document.getElementById('analyzeBtn');
@@ -108,7 +138,7 @@
 
         const arquivoInput = document.getElementById('arquivo');
         if (!arquivoInput.files.length) {
-            uploadStatus.textContent = 'Selecione um PDF primeiro.';
+            uploadStatus.textContent = MSG_SELECT_PDF;
             uploadStatus.classList.add('status-erro');
             return;
         }
@@ -117,7 +147,7 @@
         formData.append('usuarioId', usuarioIdInput.value);
         formData.append('arquivo', arquivoInput.files[0]);
 
-        uploadStatus.textContent = 'Enviando currículo...';
+        uploadStatus.textContent = MSG_SENDING;
         uploadStatus.className = 'status-text';
         resumoPerfilEl.textContent = '';
         competenciasEl.textContent = '';
@@ -134,7 +164,7 @@
             });
 
             if (!response.ok) {
-                uploadStatus.textContent = 'Erro ao enviar currículo.';
+                uploadStatus.textContent = MSG_UPLOAD_ERROR;
                 uploadStatus.classList.add('status-erro');
                 return;
             }
@@ -142,13 +172,13 @@
             const data = await response.json();
             curriculoId = data.id;
 
-            uploadStatus.textContent = 'Currículo enviado com sucesso.';
+            uploadStatus.textContent = MSG_UPLOAD_OK;
             uploadStatus.classList.add('status-ok');
 
             analiseSection.classList.remove('hidden');
             analyzeBtn.disabled = !curriculoId;
         } catch (err) {
-            uploadStatus.textContent = 'Erro inesperado ao enviar currículo.';
+            uploadStatus.textContent = MSG_UPLOAD_UNEXPECTED;
             uploadStatus.classList.add('status-erro');
         }
     });
@@ -159,7 +189,7 @@
         }
 
         analyzeBtn.disabled = true;
-        analyzeBtn.textContent = 'Gerando análise...';
+        analyzeBtn.textContent = MSG_ANALYZE_RUNNING;
 
         resumoPerfilEl.textContent = '';
         competenciasEl.textContent = '';
@@ -172,9 +202,9 @@
             });
 
             if (!response.ok) {
-                resumoPerfilEl.textContent = 'Erro ao analisar currículo.';
+                resumoPerfilEl.textContent = MSG_ANALYZE_ERROR;
                 analyzeBtn.disabled = false;
-                analyzeBtn.textContent = 'Analisar currículo com IA';
+                analyzeBtn.textContent = MSG_ANALYZE_BTN;
                 return;
             }
 
@@ -187,16 +217,16 @@
             areasAtuaisEl.innerHTML = formatSectionText(sections.areasAtuais);
             areasAlternativasEl.innerHTML = formatSectionText(sections.areasAlternativas);
         } catch (err) {
-            resumoPerfilEl.textContent = 'Erro inesperado na análise.';
+            resumoPerfilEl.textContent = MSG_ANALYZE_UNEXPECTED;
         } finally {
             analyzeBtn.disabled = false;
-            analyzeBtn.textContent = 'Analisar currículo com IA';
+            analyzeBtn.textContent = MSG_ANALYZE_BTN;
         }
     });
 
     function formatSectionText(texto) {
         if (!texto || !texto.trim()) {
-            return 'Sem informações.';
+            return MSG_NO_INFO;
         }
 
         let html = texto.trim();
@@ -204,18 +234,21 @@
         html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 
         const lower = html.toLowerCase();
-        const idx = lower.indexOf('justificativa:');
+        const labelLower = LABEL_JUSTIFICATIVA.toLowerCase();
+        const idx = lower.indexOf(labelLower);
 
         if (idx !== -1) {
             const tituloParte = html.slice(0, idx).trim();
-            const justificativaParte = html.slice(idx + 'justificativa:'.length).trim();
+            const justificativaParte = html.slice(idx + LABEL_JUSTIFICATIVA.length).trim();
 
             html =
                 (tituloParte
                     ? '<div class="analise-sugestao">' + tituloParte + '</div>'
                     : '') +
                 (justificativaParte
-                    ? '<div class="analise-justificativa"><span class="secao-label">Justificativa:</span> ' +
+                    ? '<div class="analise-justificativa"><span class="secao-label">'
+                    + LABEL_JUSTIFICATIVA +
+                    '</span> ' +
                     justificativaParte +
                     '</div>'
                     : '');
@@ -248,8 +281,10 @@
             }
         });
 
-        if (!resultado.resumo && !resultado.competencias &&
-            !resultado.areasAtuais && !resultado.areasAlternativas) {
+        if (!resultado.resumo &&
+            !resultado.competencias &&
+            !resultado.areasAtuais &&
+            !resultado.areasAlternativas) {
             resultado.resumo = texto.trim();
         }
 
